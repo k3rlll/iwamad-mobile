@@ -1,7 +1,9 @@
 {
   "expo": {
     "name": "iwamad-mobile",
-    "experiments": { "baseUrl": "/iwamad-mobile" },
+    "experiments": {
+      "baseUrl": "/iwamad-mobile"
+    },
     "slug": "iwamad-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -23,7 +25,8 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-status-bar"
+      "expo-status-bar",
+      "expo-router"
     ]
   }
 }

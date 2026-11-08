@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 import { useState } from 'react';
+import { Link } from 'expo-router';
 
-export default function App() {
+export default function HomeScreen() {
   const [likes, setLikes] = useState(0);
 
   return (
@@ -13,6 +14,12 @@ export default function App() {
       <Pressable onPress={() => setLikes(likes + 1)} style={styles.button}>
         <Text style={styles.buttonText}>Like</Text>
       </Pressable>
+
+      <Link href="/events" asChild>
+        <Pressable style={styles.button}>
+          <Text style={styles.buttonText}>Events</Text>
+        </Pressable>
+      </Link>
     </View>
   );
 }
