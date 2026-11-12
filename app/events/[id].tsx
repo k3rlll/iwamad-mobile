@@ -1,10 +1,31 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { events } from '../../src/data/events';
+import { ErrorState, LoadingState } from '../../src/components/QueryStatus';
+import { useEvents } from '../../src/hooks/useEvents';
 
 export default function EventDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const event = events.find((e) => e.id === Number(id));
+  const { data, isPending, isError, error, refetch } = useEvents();
+
+  if (isPending) {
+    return (
+      <>
+        <Stack.Screen options={{ title: 'Event' }} />
+        <LoadingState />
+      </>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>
+        <Stack.Screen options={{ title: 'Event' }} />
+        <ErrorState message={error.message} onRetry={() => refetch()} />
+      </>
+    );
+  }
+
+  const event = data.find((e) => e.id === Number(id));
 
   if (!event) {
     return (

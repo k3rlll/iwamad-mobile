@@ -2,21 +2,31 @@ import { useState } from 'react';
 import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
 import EventRow from '../../src/components/EventRow';
-import { events } from '../../src/data/events';
+import { ErrorState, LoadingState } from '../../src/components/QueryStatus';
+import { useEvents } from '../../src/hooks/useEvents';
 
 export default function EventsScreen() {
   const [savedIds, setSavedIds] = useState<number[]>([]);
   const [search, setSearch] = useState('');
-
-  const visibleEvents = events.filter((event) =>
-    event.title.toLowerCase().includes(search.toLowerCase()),
-  );
+  const { data, isPending, isError, error, refetch, isRefetching } = useEvents();
 
   function toggleSaved(id: number) {
     setSavedIds((ids) =>
       ids.includes(id) ? ids.filter((savedId) => savedId !== id) : [...ids, id],
     );
   }
+
+  if (isPending) {
+    return <LoadingState />;
+  }
+
+  if (isError) {
+    return <ErrorState message={error.message} onRetry={() => refetch()} />;
+  }
+
+  const visibleEvents = data.filter((event) =>
+    event.title.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
     <View style={styles.container}>
@@ -31,6 +41,8 @@ export default function EventsScreen() {
         data={visibleEvents}
         keyExtractor={(e) => String(e.id)}
         keyboardShouldPersistTaps="handled"
+        refreshing={isRefetching}
+        onRefresh={() => refetch()}
         renderItem={({ item }) => (
           <EventRow
             event={item}
