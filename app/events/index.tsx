@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { router } from 'expo-router';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 import EventRow from '../../src/components/EventRow';
 import { ErrorState, LoadingState } from '../../src/components/QueryStatus';
 import { useEvents } from '../../src/hooks/useEvents';
@@ -25,16 +26,20 @@ export default function EventsScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.hint}>Long-press an event to save it. Saved: {savedIds.length}</Text>
+      <Text style={styles.hint}>
+        Swipe or long-press an event to save it. Saved: {savedIds.length}
+      </Text>
       <TextInput
         value={search}
         onChangeText={setSearch}
         placeholder="Search events"
         style={styles.input}
       />
-      <FlatList
+      <Animated.FlatList
         data={visibleEvents}
         keyExtractor={(e) => String(e.id)}
+        itemLayoutAnimation={LinearTransition}
+        removeClippedSubviews={false}
         keyboardShouldPersistTaps="handled"
         refreshing={isRefetching}
         onRefresh={() => refetch()}
@@ -43,7 +48,7 @@ export default function EventsScreen() {
             event={item}
             saved={savedIds.includes(item.id)}
             onPress={() => router.push(`/events/${item.id}`)}
-            onLongPress={() => toggleSaved(item.id)}
+            onToggleSaved={() => toggleSaved(item.id)}
           />
         )}
         ListEmptyComponent={<Text style={styles.empty}>No events match</Text>}
