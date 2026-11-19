@@ -4,17 +4,12 @@ import { router } from 'expo-router';
 import EventRow from '../../src/components/EventRow';
 import { ErrorState, LoadingState } from '../../src/components/QueryStatus';
 import { useEvents } from '../../src/hooks/useEvents';
+import { useSavedIds } from '../../src/hooks/useSavedIds';
 
 export default function EventsScreen() {
-  const [savedIds, setSavedIds] = useState<number[]>([]);
+  const { savedIds, toggleSaved } = useSavedIds();
   const [search, setSearch] = useState('');
   const { data, isPending, isError, error, refetch, isRefetching } = useEvents();
-
-  function toggleSaved(id: number) {
-    setSavedIds((ids) =>
-      ids.includes(id) ? ids.filter((savedId) => savedId !== id) : [...ids, id],
-    );
-  }
 
   if (isPending) {
     return <LoadingState />;
