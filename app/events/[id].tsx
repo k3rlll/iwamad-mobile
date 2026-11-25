@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
+import ChatPanel from '../../src/components/ChatPanel';
 import HolidayNote from '../../src/components/HolidayNote';
 import { ErrorState, LoadingState } from '../../src/components/QueryStatus';
 import { useEvents } from '../../src/hooks/useEvents';
@@ -30,7 +31,7 @@ export default function EventDetailsScreen() {
 
   if (!event) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, styles.content]}>
         <Stack.Screen options={{ title: 'Not found' }} />
         <Text style={styles.title}>Event not found</Text>
         <Text style={styles.line}>No event with id {id}.</Text>
@@ -39,22 +40,29 @@ export default function EventDetailsScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      keyboardShouldPersistTaps="handled"
+    >
       <Stack.Screen options={{ title: event.title }} />
       <Text style={styles.title}>{event.title}</Text>
       <Text style={styles.line}>Date: {event.date}</Text>
       <HolidayNote date={event.date} />
       <Text style={styles.line}>Place: {event.place}</Text>
       <Text style={styles.line}>Seats: {event.seats}</Text>
-    </View>
+      <ChatPanel key={event.id} eventId={event.id} eventTitle={event.title} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#fff',
+  },
+  content: {
+    padding: 16,
   },
   title: {
     marginBottom: 12,
