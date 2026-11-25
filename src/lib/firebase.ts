@@ -8,8 +8,10 @@ const firebaseConfig = {
   authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
   databaseURL: emulatorHost
     ? 'https://demo-iwamad-chat-default-rtdb.firebaseio.com'
-    : process.env.EXPO_PUBLIC_FIREBASE_DATABASE_URL,
-  projectId: emulatorHost ? 'demo-iwamad-chat' : process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+    : process.env.EXPO_PUBLIC_FIREBASE_DATABASE_URL || 'https://iwamad-chat-3655d-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: emulatorHost
+    ? 'demo-iwamad-chat'
+    : process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'iwamad-chat-3655d',
   storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
